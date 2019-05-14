@@ -1,0 +1,224 @@
+//EE382M-Verification of Digital Systems
+//Project - Formal Property Verification
+//
+//
+//Modules - 
+//SystemVerilog Properties for the module - 
+`include "mesi_isc_define.v"
+`include  "mesi_isc_tb_define.v"
+
+module mesi_isc_drive_props(
+     clk,
+     rst,
+     mbus_data3_i,   
+     mbus_data2_i,
+     mbus_data1_i,
+     mbus_data0_i,
+     tb_ins3_i,
+     tb_ins2_i,
+     tb_ins1_i,
+     tb_ins0_i,
+     tb_ins_addr3_i,
+     tb_ins_addr2_i,
+     tb_ins_addr1_i,
+     tb_ins_addr0_i,
+     mbus_data3_o,
+     mbus_data2_o,
+     mbus_data1_o,
+     mbus_data0_o,
+     tb_ins_ack3_o,
+     tb_ins_ack2_o,
+     tb_ins_ack1_o,
+     tb_ins_ack0_o
+);
+
+  parameter
+  DATA_WIDTH = 32;
+
+  input 		       clk;
+  input			       rst;
+  input [DATA_WIDTH-1:0]       mbus_data3_i;
+  input [DATA_WIDTH-1:0]       mbus_data2_i;
+  input [DATA_WIDTH-1:0]       mbus_data1_i;
+  input [DATA_WIDTH-1:0]       mbus_data0_i;
+  input [3:0]                  tb_ins3_i;
+  input [3:0]                  tb_ins2_i;
+  input [3:0]                  tb_ins1_i;
+  input [3:0]                  tb_ins0_i;
+  input [3:0]                  tb_ins_addr3_i;
+  input [3:0]                  tb_ins_addr2_i;
+  input [3:0]                  tb_ins_addr1_i;
+  input [3:0]                  tb_ins_addr0_i;
+  input [DATA_WIDTH-1:0]       mbus_data3_o;
+  input [DATA_WIDTH-1:0]       mbus_data2_o;
+  input [DATA_WIDTH-1:0]       mbus_data1_o;
+  input [DATA_WIDTH-1:0]       mbus_data0_o;
+  input			       tb_ins_ack3_o;
+  input			       tb_ins_ack2_o;
+  input			       tb_ins_ack1_o;
+  input			       tb_ins_ack0_o;
+
+  assume property(@(posedge clk) tb_ins3_i inside {0,1,2});
+  assume property(@(posedge clk) tb_ins2_i inside {0,1,2});
+  assume property(@(posedge clk) tb_ins1_i inside {0,1,2});
+  assume property(@(posedge clk) tb_ins0_i inside {0,1,2});
+
+  assume property(@(posedge clk) tb_ins_addr3_i >= 0 && tb_ins_addr3_i <= 15);
+  assume property(@(posedge clk) tb_ins_addr2_i >= 0 && tb_ins_addr2_i <= 15);
+  assume property(@(posedge clk) tb_ins_addr1_i >= 0 && tb_ins_addr1_i <= 15);
+  assume property(@(posedge clk) tb_ins_addr0_i >= 0 && tb_ins_addr0_i <= 15);
+
+  //CPU instruction acknowledge sequence - valid only for read and write
+  assume property(@(posedge clk) $changed(tb_ins3_i) && tb_ins3_i inside {1,2} |-> $stable(tb_ins3_i)[*0:$] ##1 tb_ins_ack3_o);
+  assume property(@(posedge clk) $changed(tb_ins2_i) && tb_ins3_i inside {1,2} |-> $stable(tb_ins2_i)[*0:$] ##1 tb_ins_ack2_o);
+  assume property(@(posedge clk) $changed(tb_ins1_i) && tb_ins3_i inside {1,2} |-> $stable(tb_ins1_i)[*0:$] ##1 tb_ins_ack1_o);
+  assume property(@(posedge clk) $changed(tb_ins0_i) && tb_ins3_i inside {1,2} |-> $stable(tb_ins0_i)[*0:$] ##1 tb_ins_ack0_o);
+
+  //CPU instruction address acknowledge sequence
+  assume property(@(posedge clk) $changed(tb_ins_addr3_i) |-> $stable(tb_ins_addr3_i)[*0:$] ##1 tb_ins_ack3_o);
+  assume property(@(posedge clk) $changed(tb_ins_addr2_i) |-> $stable(tb_ins_addr2_i)[*0:$] ##1 tb_ins_ack2_o);
+  assume property(@(posedge clk) $changed(tb_ins_addr1_i) |-> $stable(tb_ins_addr1_i)[*0:$] ##1 tb_ins_ack1_o);
+  assume property(@(posedge clk) $changed(tb_ins_addr0_i) |-> $stable(tb_ins_addr0_i)[*0:$] ##1 tb_ins_ack0_o);
+
+  assert property(@(posedge clk) $changed(tb_ins3_i)  |-> ##[1:30] tb_ins_ack3_o);
+
+endmodule
+
+module mesi_isc_props(
+     clk,
+     rst,
+     mbus_cmd3_i,
+     mbus_cmd2_i,
+     mbus_cmd1_i,
+     mbus_cmd0_i,
+     mbus_addr3_i,
+     mbus_addr2_i,
+     mbus_addr1_i,
+     mbus_addr0_i,
+     cbus_ack3_i,
+     cbus_ack2_i,
+     cbus_ack1_i,
+     cbus_ack0_i,
+     cbus_addr_o,
+     cbus_cmd3_o,
+     cbus_cmd2_o,
+     cbus_cmd1_o,
+     cbus_cmd0_o,
+     mbus_ack3_o,
+     mbus_ack2_o,
+     mbus_ack1_o,
+     mbus_ack0_o
+);
+
+parameter
+  CBUS_CMD_WIDTH           = 3,
+  ADDR_WIDTH               = 32,
+  BROAD_TYPE_WIDTH         = 2,
+  BROAD_ID_WIDTH           = 5,
+  BROAD_REQ_FIFO_SIZE      = 4,
+  BROAD_REQ_FIFO_SIZE_LOG2 = 2,
+  MBUS_CMD_WIDTH           = 3,
+  BREQ_FIFO_SIZE           = 2,
+  BREQ_FIFO_SIZE_LOG2      = 1;
+
+  input                       clk;
+  input                       rst;
+  input [MBUS_CMD_WIDTH-1:0]  mbus_cmd3_i;
+  input [MBUS_CMD_WIDTH-1:0]  mbus_cmd2_i;
+  input [MBUS_CMD_WIDTH-1:0]  mbus_cmd1_i;
+  input [MBUS_CMD_WIDTH-1:0]  mbus_cmd0_i;
+  input [ADDR_WIDTH-1:0]      mbus_addr3_i;
+  input [ADDR_WIDTH-1:0]      mbus_addr2_i;
+  input [ADDR_WIDTH-1:0]      mbus_addr1_i;
+  input [ADDR_WIDTH-1:0]      mbus_addr0_i;
+  input                       cbus_ack3_i;
+  input                       cbus_ack2_i;
+  input                       cbus_ack1_i;
+  input                       cbus_ack0_i;
+  input [ADDR_WIDTH-1:0]      cbus_addr_o;
+  input [CBUS_CMD_WIDTH-1:0]  cbus_cmd3_o;
+  input [CBUS_CMD_WIDTH-1:0]  cbus_cmd2_o;
+  input [CBUS_CMD_WIDTH-1:0]  cbus_cmd1_o;
+  input [CBUS_CMD_WIDTH-1:0]  cbus_cmd0_o;
+  input                       mbus_ack3_o;
+  input                       mbus_ack2_o;
+  input                       mbus_ack1_o;
+  input                       mbus_ack0_o;
+
+//formal properties to be asserted, covered and assumed
+
+ack_reset0: assert property(@(posedge clk) $past(rst,1) |-> !$past(mbus_ack0_o,1));
+ack_reset1: assert property(@(posedge clk) $past(rst,1) |-> !$past(mbus_ack1_o,1));
+ack_reset2: assert property(@(posedge clk) $past(rst,1) |-> !$past(mbus_ack2_o,1));
+ack_reset3: assert property(@(posedge clk) $past(rst,1) |-> !$past(mbus_ack3_o,1));
+
+endmodule
+
+module Wrapper;
+
+//Bind the 'mesi_isc_props' module with the 'mesi_isc' module to instantiate the properties
+bind top_module mesi_isc_props #(
+   .CBUS_CMD_WIDTH(CBUS_CMD_WIDTH),
+   .ADDR_WIDTH(ADDR_WIDTH),
+   .BROAD_TYPE_WIDTH(BROAD_TYPE_WIDTH),
+   .BROAD_ID_WIDTH(BROAD_ID_WIDTH),
+   .BROAD_REQ_FIFO_SIZE(BROAD_REQ_FIFO_SIZE),
+   .BROAD_REQ_FIFO_SIZE_LOG2(BROAD_REQ_FIFO_SIZE_LOG2),
+   .MBUS_CMD_WIDTH(MBUS_CMD_WIDTH),
+   .BREQ_FIFO_SIZE(BREQ_FIFO_SIZE),
+   .BREQ_FIFO_SIZE_LOG2(BREQ_FIFO_SIZE_LOG2)
+  )
+  bind_wrapper_inst(
+   .clk(clk),
+   .rst(rst),
+   .mbus_cmd3_i(mbus_cmd3_o),
+   .mbus_cmd2_i(mbus_cmd2_o),
+   .mbus_cmd1_i(mbus_cmd1_o),
+   .mbus_cmd0_i(mbus_cmd0_o),
+   .mbus_addr3_i(mbus_addr3_o),
+   .mbus_addr2_i(mbus_addr2_o),
+   .mbus_addr1_i(mbus_addr1_o),
+   .mbus_addr0_i(mbus_addr0_o),
+   .cbus_ack3_i(cbus_ack3),
+   .cbus_ack2_i(cbus_ack2),
+   .cbus_ack1_i(cbus_ack1),
+   .cbus_ack0_i(cbus_ack0),
+   .cbus_addr_o(cbus_addr_o),
+   .cbus_cmd3_o(cbus_cmd3_o),
+   .cbus_cmd2_o(cbus_cmd2_o),
+   .cbus_cmd1_o(cbus_cmd1_o),
+   .cbus_cmd0_o(cbus_cmd0_o),
+   .mbus_ack3_o(mbus_ack3_o),
+   .mbus_ack2_o(mbus_ack2_o),
+   .mbus_ack1_o(mbus_ack1_o),
+   .mbus_ack0_o(mbus_ack0_o)
+  );
+
+  bind top_module mesi_isc_drive_props #(
+   .DATA_WIDTH(DATA_WIDTH)
+   ) bind_wrapper_inst1 (
+   .clk(clk),
+   .rst(rst),
+   .mbus_data3_i(mbus_data3_i),
+   .mbus_data2_i(mbus_data2_i),
+   .mbus_data1_i(mbus_data1_i),
+   .mbus_data0_i(mbus_data0_i),
+   .tb_ins3_i(tb_ins3_i),
+   .tb_ins2_i(tb_ins2_i),
+   .tb_ins1_i(tb_ins1_i),
+   .tb_ins0_i(tb_ins0_i),
+   .tb_ins_addr3_i(tb_ins_addr3_i),
+   .tb_ins_addr2_i(tb_ins_addr2_i),
+   .tb_ins_addr1_i(tb_ins_addr1_i),
+   .tb_ins_addr0_i(tb_ins_addr0_i),
+   .mbus_data3_o(mbus_data3_o),
+   .mbus_data2_o(mbus_data2_o),
+   .mbus_data1_o(mbus_data1_o),
+   .mbus_data0_o(mbus_data0_o),
+   .tb_ins_ack3_o(tb_ins_ack3_o),
+   .tb_ins_ack2_o(tb_ins_ack2_o),
+   .tb_ins_ack1_o(tb_ins_ack1_o),
+   .tb_ins_ack0_o(tb_ins_ack0_o)
+   );
+
+endmodule

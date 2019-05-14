@@ -1,0 +1,53 @@
+K 25
+svn:wc:ra_dav:version-url
+V 49
+/ocsvn/mesi_isc/!svn/ver/2/mesi_isc/trunk/src/rtl
+END
+mesi_isc.v
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/ocsvn/mesi_isc/!svn/ver/2/mesi_isc/trunk/src/rtl/mesi_isc.v
+END
+mesi_isc_basic_fifo.v
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/ocsvn/mesi_isc/!svn/ver/2/mesi_isc/trunk/src/rtl/mesi_isc_basic_fifo.v
+END
+mesi_isc_broad.v
+K 25
+svn:wc:ra_dav:version-url
+V 66
+/ocsvn/mesi_isc/!svn/ver/2/mesi_isc/trunk/src/rtl/mesi_isc_broad.v
+END
+mesi_isc_broad_cntl.v
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/ocsvn/mesi_isc/!svn/ver/2/mesi_isc/trunk/src/rtl/mesi_isc_broad_cntl.v
+END
+mesi_isc_define.v
+K 25
+svn:wc:ra_dav:version-url
+V 67
+/ocsvn/mesi_isc/!svn/ver/2/mesi_isc/trunk/src/rtl/mesi_isc_define.v
+END
+README.txt
+K 25
+svn:wc:ra_dav:version-url
+V 60
+/ocsvn/mesi_isc/!svn/ver/2/mesi_isc/trunk/src/rtl/README.txt
+END
+mesi_isc_breq_fifos.v
+K 25
+svn:wc:ra_dav:version-url
+V 71
+/ocsvn/mesi_isc/!svn/ver/2/mesi_isc/trunk/src/rtl/mesi_isc_breq_fifos.v
+END
+mesi_isc_breq_fifos_cntl.v
+K 25
+svn:wc:ra_dav:version-url
+V 76
+/ocsvn/mesi_isc/!svn/ver/2/mesi_isc/trunk/src/rtl/mesi_isc_breq_fifos_cntl.v
+END

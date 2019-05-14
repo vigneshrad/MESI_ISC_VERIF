@@ -1,0 +1,26 @@
+MESI_ISC Project
+=================
+
+Directory: Formal
+=================
+
+Contains all the project`s source files.
+
+Steps to run the formal testbench on the LRC machine:
+
+1) Load the cadence 2016 tool suite by using the following command
+	module load cadence/2016
+
+2) The src/tb directory contains the bind wrapper (bind_wrapper.sv) for the DUT and test bench define files
+
+3) The src/rtl directory contains the RTL files for the DUT
+
+4) goto src/tb/ directory - the directory containing the formal testbench files
+	cd src/tb/
+
+5) Launch the formal tool using the following command
+	jaspergold mesi.tcl &
+
+6) The formal tool graphical user interface opens in a new window and the formal properties are verified.
+
+7) Coverage and summary are shown after the properties have been verified by the formal engine
