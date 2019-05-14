@@ -1,4 +1,4 @@
-`include "/misc/scratch/vignesh/verif_project/tb/mesi_isc_tb_define.v"
+`include "/misc/scratch/VERIF_PROJECT_VSMB/LATEST_TB/tb/mesi_isc_tb_define.v"
 `include "uvm_macros.svh"
 package coverage;
 import uvm_pkg::*;
