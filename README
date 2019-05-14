@@ -1,0 +1,9 @@
+./rtl/ ---> CONTAINS THE RTL FILES from opencore:https://opencores.org/projects/mesi_isc
+./tb/  ---> CONTAINS THE TB FILES that we created plus support CPU model from Opencores
+./sim/ ---> SIMULATION DIR
+
+STEPS TO RUN:
+SOURCE env.csh in home directory
+go to sim directory and execute the following command:
+make all --> command line vsim option
+make gui --> For Invoking MODELSIM GUI INTERFACE
