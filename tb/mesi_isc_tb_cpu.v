@@ -1,5 +1,5 @@
-`include "/misc/scratch/vignesh/verif_project/rtl/mesi_isc_define.v"
-`include "/misc/scratch/vignesh/verif_project/tb/mesi_isc_tb_define.v"
+`include "/misc/scratch/VERIF_PROJECT_VSMB/LATEST_TB/rtl/mesi_isc_define.v"
+`include "/misc/scratch/VERIF_PROJECT_VSMB/LATEST_TB/tb/mesi_isc_tb_define.v"
 
 module mesi_isc_tb_cpu
     (
